@@ -1,36 +1,76 @@
-# Name - 192.168.XX.XX
+# name
 
 IP:
 OS:
-Web-Technology: 
-Users:
-Credentials (any):
-local.txt flag:
-proof.txt flag:
 
-## To Try
-
-
-## Findings
-
+# Set target variables
+```shell
+export IP="10.0.0.1"
+```
 
 # Enumeration
 
 ## Nmap
 
+## Gobuster
 
+## Wfuzz
 
-## Web Service Enumeration
+## Hakrawler
 
-### Nikto
+# Vulnerabilities
 
+## XSS (Cross-Site Scripting)
 
-### Wfuzz
+### Discover
 
-#### Files / (web root)
+### Exploration
 
+## CSRF (Cross-Site Request Forgery)
 
-#### Directories / (Web root)
+### Discover
 
+### Exploration
 
-# Other
+## SSRF (Server Side Template Injection)
+
+### Discover
+
+### Exploration
+
+## SQLi (SQL Injection)
+
+### Discover
+
+### Exploration
+
+## Directory Traversal
+
+### Discover
+
+### Exploration
+
+## XXE (XML External Entity)
+
+### Discover
+
+### Exploration
+
+## IDOR (Insecure Direct Object Referenc)
+
+### Discover
+
+### Exploration
+
+## Command Injection 
+
+### Discover
+
+### Exploration
+
+## Brute forcing
+
+### Discover
+
+### Exploration
+
