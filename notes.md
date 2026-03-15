@@ -16,8 +16,6 @@ export IP="10.0.0.1"
 
 ## Wfuzz
 
-## Hakrawler
-
 # Vulnerabilities
 
 ## XSS (Cross-Site Scripting)
@@ -32,7 +30,7 @@ export IP="10.0.0.1"
 
 ### Exploration
 
-## SSRF (Server Side Template Injection)
+## SSRF (Server‑Side Request Forgery)
 
 ### Discover
 
@@ -56,7 +54,13 @@ export IP="10.0.0.1"
 
 ### Exploration
 
-## IDOR (Insecure Direct Object Referenc)
+## SSTI (Server Side Template Injection)
+
+### Discover
+
+### Exploration
+
+## IDOR (Insecure Direct Object Reference)
 
 ### Discover
 

@@ -15,6 +15,17 @@ This toolkit provides structured approaches to web application penetration testi
 - Vulnerability testing procedures 
 - Target documentation templates
 
+## Links
+
+Payloads
+https://github.com/swisskyrepo/PayloadsAllTheThings
+
+Gopher
+https://github.com/eMVee-NL/SSRF2gopher
+
+Reverse Shell
+https://www.revshells.com/
+
 ## References
 
 Inspired by: https://github.com/bastyn/OSWA
