@@ -17,7 +17,7 @@ gobuster dir -u $IP -w /usr/share/seclists/Discovery/Web-Content/raft-large-word
 
 ### Endpoint discovery
 ```shell
-gobuster dir -u $IP -w /usr/share/seclists/Discovery/Web-Content/raft-large-directories.txt -x php,html,txt,js
+gobuster dir -u $IP -w /usr/share/seclists/Discovery /Web-Content/raft-large-directories.txt -x php,html,txt,js
 ```
 
 ## Wfuzz

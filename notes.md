@@ -32,7 +32,7 @@ export IP="10.0.0.1"
 
 ### Exploration
 
-## SSRF (Server Side Template Injection)
+## SSRF (Server‑Side Request Forgery)
 
 ### Discover
 
@@ -51,6 +51,12 @@ export IP="10.0.0.1"
 ### Exploration
 
 ## XXE (XML External Entity)
+
+### Discover
+
+### Exploration
+
+## SSTI (Server Side Template Injection)
 
 ### Discover
 

