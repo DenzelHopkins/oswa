@@ -1,31 +1,24 @@
-# OSWA (Offensive Security Web Attack) Toolkit
+# OSWA
 
-This repository contains tools and resources for web application penetration testing, inspired by the Offensive Security Web Attack (OSWA) methodology.
+Notes, techniques, and solutions for the Offensive Security Web Attacks (OSWA) certification.
 
-## Contents
+## Architecture
 
-- `enumeration.md`: Enumeration techniques and commands for web application testing
-- `vulnerabilities.md`: Testing procedures for various vulnerability types (XSS, SQLi, LFI, etc.)
-- `notes.md`: Template for documenting target information and findings
+Flat markdown files organised by topic — enumeration, vulnerability testing, and per-machine writeups. Practice machine walkthroughs live under `solutions/`, exam findings under `exam/`.
 
-## Usage
+## Components
 
-This toolkit provides structured approaches to web application penetration testing, including:
-- Enumeration techniques with example commands
-- Vulnerability testing procedures 
-- Target documentation templates
+- **enumeration.md** — web application enumeration techniques and commands
+- **vulnerabilities.md** — testing procedures for XSS, SQLi, LFI, SSRF, SSTI, and other vulnerability classes
+- **notes.md** — template for documenting target information and findings
+- **training.md** — index of practice machines and labs
 
-## Links
+## Useful Links 
 
-Payloads
-https://github.com/swisskyrepo/PayloadsAllTheThings
+- [PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings) — payload reference
+- [revshells.com](https://www.revshells.com) — reverse shell generator
+- [SSTI cheatsheet](https://cheatsheet.hackmanit.de/template-injection-table) — template injection reference table
 
-Gopher
-https://github.com/eMVee-NL/SSRF2gopher
+## Inspired by
 
-Reverse Shell
-https://www.revshells.com/
-
-## References
-
-Inspired by: https://github.com/bastyn/OSWA
+- [bastyn/OSWA](https://github.com/bastyn/OSWA) — original structure and methodology reference
