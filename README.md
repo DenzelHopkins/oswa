@@ -13,9 +13,12 @@ Flat markdown files organised by topic — enumeration, vulnerability testing, a
 - **notes.md** — template for documenting target information and findings
 - **training.md** — index of practice machines and labs
 
-## Inspired by
+## Useful Links 
 
-- [bastyn/OSWA](https://github.com/bastyn/OSWA) — original structure and methodology reference
 - [PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings) — payload reference
 - [revshells.com](https://www.revshells.com) — reverse shell generator
 - [SSTI cheatsheet](https://cheatsheet.hackmanit.de/template-injection-table) — template injection reference table
+
+## Inspired by
+
+- [bastyn/OSWA](https://github.com/bastyn/OSWA) — original structure and methodology reference
